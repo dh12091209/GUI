@@ -34,6 +34,7 @@ public class HelloController {
     private Label strengthValueLabel, dexterityValueLabel, intelligenceValueLabel, constitutionValueLabel, charismaValueLabel, wisdomValueLabel;
 
     int x=100, y=100;
+    int p_x = 100, p_y = 100;
     int saveCounter = 0;
     boolean changedName  = false;
     boolean characterCreated = false;
@@ -73,8 +74,9 @@ public class HelloController {
                 }
                 //else, character has been created, play the game
                 else{
-                    gc.drawImage(image,100,100);
+                    gc.drawImage(image,p_x,p_y);
                 }
+
             }
         };
 
@@ -200,5 +202,16 @@ public class HelloController {
     @FXML
     protected void onHelloButtonClick() {
         welcomeText.setText("Welcome to JavaFX Application!");
+    }
+    public void moveUp(){
+        p_y-=10;
+    }
+    public void moveDown(){
+        p_y+=10;
+    }
+    public void moveLeft(){
+        p_x-=10;
+    }public void moveRight(){
+        p_x+=10;
     }
 }
