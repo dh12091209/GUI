@@ -13,9 +13,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import java.util.*;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class HelloController {
     @FXML
@@ -38,7 +41,7 @@ public class HelloController {
     int saveCounter = 0;
     boolean changedName  = false;
     boolean characterCreated = false;
-
+    private File characterFile;
     @FXML
     public void initialize() {
 
@@ -48,6 +51,17 @@ public class HelloController {
         nameField.setEditable(false);
         nameField.setVisible(false);
         saveCharacterButton.setVisible(false);
+
+        //load and/or create character data file
+        characterFile = new File("character.deg");
+        if(!characterFile.exists()){
+            try {
+                characterFile.createNewFile();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
 
         //load external resouces
         final Image image;
@@ -83,7 +97,12 @@ public class HelloController {
         anim.start();
 
     }
-
+    @FXML
+    protected void onSaveMenuClicked() throws FileNotFoundException {
+        Formatter output = new Formatter(characterFile);
+        output.format("%s,%s,%s,%s,%s,%s,%s",nameField.getText(),strengthValueLabel.getText(),dexterityValueLabel.getText(),constitutionValueLabel.getText(),intelligenceValueLabel.getText(),wisdomValueLabel.getText(),charismaValueLabel.getText());
+        output.close();
+    }
     @FXML
     protected void setEditNameButtonClick() {
         String buttonText = editNameButton.getText();
