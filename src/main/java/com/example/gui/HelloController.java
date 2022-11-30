@@ -99,9 +99,35 @@ public class HelloController {
     }
     @FXML
     protected void onSaveMenuClicked() throws FileNotFoundException {
-        Formatter output = new Formatter(characterFile);
-        output.format("%s,%s,%s,%s,%s,%s,%s",nameField.getText(),strengthValueLabel.getText(),dexterityValueLabel.getText(),constitutionValueLabel.getText(),intelligenceValueLabel.getText(),wisdomValueLabel.getText(),charismaValueLabel.getText());
-        output.close();
+        File file = HelloApplication.openSaveDialog();
+        if(file != null){
+            file = new File(file.getAbsolutePath()+".deg");
+            Formatter output = new Formatter(file);
+            output.format("%s,%s,%s,%s,%s,%s,%s",nameField.getText(),strengthValueLabel.getText(),dexterityValueLabel.getText(),constitutionValueLabel.getText(),intelligenceValueLabel.getText(),wisdomValueLabel.getText(),charismaValueLabel.getText());
+            output.close();
+        }
+
+    }
+    @FXML
+    protected void onOpenMenuClicked() throws FileNotFoundException{
+        ArrayList<String> stats = new ArrayList<>();
+        File file = HelloApplication.openFileDialog();
+        if(file != null){
+            Scanner scanner = new Scanner(file);
+            String stat = scanner.next();
+            String s="";
+            for(int i =0; i<stat.length(); i++){
+                if(!stat.substring(i,i+1).equals(",")){
+                    s += stat.substring(i,i+1);
+                }
+                else {
+                    stats.add(s);
+                    s ="";
+                }
+            }
+            stats.add(s);
+            System.out.println(stats);
+        }
     }
     @FXML
     protected void setEditNameButtonClick() {
