@@ -110,6 +110,7 @@ public class HelloController {
     }
     @FXML
     protected void onOpenMenuClicked() throws FileNotFoundException{
+        Label[] lists = {strengthValueLabel, dexterityValueLabel, intelligenceValueLabel, constitutionValueLabel, charismaValueLabel, wisdomValueLabel};
         ArrayList<String> stats = new ArrayList<>();
         File file = HelloApplication.openFileDialog();
         if(file != null){
@@ -126,7 +127,12 @@ public class HelloController {
                 }
             }
             stats.add(s);
-            System.out.println(stats);
+            nameLabel.setText(stats.get(0));
+            for(int i =0; i<lists.length; i++){
+                lists[i].setText(stats.get(i+1));
+            }
+            onSaveButtonClicked();
+//            System.out.println(stats);
         }
     }
     @FXML
