@@ -10,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -37,44 +38,26 @@ public class HelloController {
     private Label strengthValueLabel, dexterityValueLabel, intelligenceValueLabel, constitutionValueLabel, charismaValueLabel, wisdomValueLabel;
 
     int x=100, y=100;
-    int p_x = 100, p_y = 100;
-    int saveCounter = 0;
-    boolean changedName  = false;
+    int x1=100, y1=100;
+    int saveCounter=0;
+    boolean changedName = false;
     boolean characterCreated = false;
-    private File characterFile;
+    Player player;
+
     @FXML
     public void initialize() {
-
         GraphicsContext gc = gameCanvas.getGraphicsContext2D();
         Font theFont = Font.font( "Times New Roman", FontWeight.BOLD, 48 );
         gc.setFont( theFont );
         nameField.setEditable(false);
         nameField.setVisible(false);
         saveCharacterButton.setVisible(false);
-
-        //load and/or create character data file
-        characterFile = new File("character.deg");
-        if(!characterFile.exists()){
-            try {
-                characterFile.createNewFile();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-
-        //load external resouces
-        final Image image;
-        try{
-            image = new Image(new FileInputStream("src/main/resources/com/example/gui/guy.png"));
-        }catch (FileNotFoundException e){
-            throw new RuntimeException("Could not load player Image");
-        }
+        player = new Player("guy.png", 100,100);
 
         AnimationTimer anim = new AnimationTimer() {
             @Override
             public void handle(long l) {
-//                gc.clearRect(0,0,800,600);
+                //gc.clearRect(0,0,800,600);
                 gc.setFill(Color.BISQUE);
                 gc.fillRect(0,0,800,600);
 
@@ -87,16 +70,33 @@ public class HelloController {
                     gc.fillText("Create Character", x, y + 100);
                 }
                 //else, character has been created, play the game
-                else{
-                    gc.drawImage(image,p_x,p_y);
+                else {
+                    movement();
+                    player.testCollision(gc);
+                    player.draw(gc);
                 }
-
             }
         };
 
         anim.start();
 
     }
+
+    protected void movement(){
+        if(HelloApplication.currentlyActiveKeys.contains(KeyCode.A.toString())){
+            player.moveLeft();
+        }
+        if (HelloApplication.currentlyActiveKeys.contains(KeyCode.D.toString())) {
+            player.moveRight();
+        }
+        if (HelloApplication.currentlyActiveKeys.contains(KeyCode.S.toString())) {
+            player.moveDown();
+        }
+        if (HelloApplication.currentlyActiveKeys.contains(KeyCode.W.toString())) {
+            player.moveUp();
+        }
+    }
+
     @FXML
     protected void onSaveMenuClicked() throws FileNotFoundException {
         File file = HelloApplication.openSaveDialog();
@@ -254,15 +254,5 @@ public class HelloController {
     protected void onHelloButtonClick() {
         welcomeText.setText("Welcome to JavaFX Application!");
     }
-    public void moveUp(){
-        p_y-=10;
-    }
-    public void moveDown(){
-        p_y+=10;
-    }
-    public void moveLeft(){
-        p_x-=10;
-    }public void moveRight(){
-        p_x+=10;
-    }
+
 }
